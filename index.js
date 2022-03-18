@@ -31,7 +31,7 @@ app.get('/', function(req, res) {
     
 
             let data = result.rows[0];
-            console.log(data);
+            // console.log(data);
          //    map for data project
      
             let dataProjects = result.rows.map(function (data) {
@@ -123,28 +123,26 @@ app.get('/detail-project', function(req, res) {
 app.get('/update-project/:id', function (req, res) {
     
     let id = req.params.id;
-    console.log('id project ', id);
+    // console.log('id project ', id);
     db.connect(function (err, client, done) {
         if (err) throw err;
-        const query = `SELECT * FROM tb_project_data WHERE id=2`;
+        const query = `SELECT * FROM tb_project_data WHERE id=${id}`;
 
-        console.log(query);
+        // console.log(query);
         client.query(query, function (err, result) {
             if (err) throw err;
 
             let data = result.rows[0];
             data = {
                 ...data,
-                //date harus di render
                 startdate: renderDate(data.startdate),
                 enddate: renderDate(data.enddate),
-                //render viewchecked
                 nodejs: viewCheck(data.nodejs),
                 reactjs: viewCheck(data.reactjs),
                 nextjs: viewCheck(data.nextjs),
                 typescript: viewCheck(data.typescript)
             }
-            console.log(data);
+            // console.log(data);
             res.render('update-project', { updateproject: data });
 
             done();
@@ -161,9 +159,10 @@ app.post('/update-project/:id', function (req, res) {
         if (err) throw err;
 
         const query = `UPDATE tb_project_data
-         SET projectname= '${update.projectname}', startdate= '${update.startdate}', enddate='${update.enddate}', description='${update.description}', image='image.png', nodejs=${checkboxRender(update.nodejs)}, reactjs=${checkboxRender(update.reactjs)}, nextjs=${checkboxRender(update.nextjs)}, typescript=${checkboxRender(update.typescript)}
-         WHERE id=${id};`;
+         SET projectname= '${update.projectname}', startdate= '${update.startdate}', enddate='${update.enddate}', description='${update.description}', image='image.png', nodejs='${checkboxRender(update.nodejs)}', reactjs='${checkboxRender(update.reactjs)}', nextjs='${checkboxRender(update.nextjs)}', typescript='${checkboxRender(update.typescript)}'
+         WHERE id=${id}`;
 
+         console.log(query)
         client.query(query, function (err, result) {
             if (err) throw err;
 

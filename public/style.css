@@ -188,7 +188,7 @@ nav .right-side a:hover {
 }
 
 .img1 {
-    background-image: url('pictures/bintoro2.jpg');
+    background-image: url('/public/pictures/bintoro2.jpg');
 }
 
 .card h2 {
@@ -687,7 +687,7 @@ input[type=checkbox] {
 }
 
 .illustration-img {
-    background-image: url('pictures/detail-project.jpg');
+    background-image: url('/public/pictures/detail-project.jpg');
     background-size: cover;          
 }
 
