@@ -237,11 +237,15 @@ body {
     display: inline-block;
     width: 100%;
     margin-top: 3%;
+    word-wrap: break-word !important;
     word-break: break-all;
     font-size: 1.6rem;
     font-weight: 600;
-    /* overflow: hidden; */
+    overflow: hidden;
     color: black;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .p-card h5 a {
@@ -260,19 +264,26 @@ body {
     color: #888888;
     height: 2%;
     font-size: 1.15rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .p-card p:not(:first-of-type) {
     display: inline-block;
     width: 100%;
-    margin-top: 6%;
-    height: 23%;
+    /* margin-top: 6%;
+    height: 23%; */
     font-size: 1.2rem;
     font-weight: 500;
     text-align: justify;
     word-break: break-all;
     overflow: hidden;
     color: black;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
 }
 
 .p-card .icon-container {

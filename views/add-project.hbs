@@ -45,13 +45,13 @@
       {{!-- NAVBAR END --}}
 
         <!-- ADD PROJECT FORM START -->
-        <div class="main-container">
+        <div class="container-fluid" style="max-width: 600px; height: 97vh;">
 
           <div class="mx-auto" style="width:fit-content; display:block; margin:50px auto;">
               <h2 class="fw-bold">ADD MY PROJECT</h2>
           </div>
           
-          <form action='/add-project' method="POST" style="max-width: 800px; margin:0 auto;" class="fs-5">
+          <form action='/add-project' method="POST" enctype="multipart/form-data" tyle="max-width: 800px; margin:0 auto;" class="fs-5">
             
             <div class="mb-3">
               <label for="project-name" class="form-label fw-label">Project Name</label>

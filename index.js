@@ -4,6 +4,9 @@ const session = require('express-session');
 const flash = require('express-flash');
 
 const db = require('./connection/db');
+const upload = require('./middlewares/uploadFile')
+
+const PATH = 'http://localhost:5001/uploads/'
 
 db.connect(function(err, _, done) {
     if (err) throw err;
@@ -32,30 +35,70 @@ app.use(
 );
 
 app.use('/public', express.static(__dirname + '/public'));
+app.use('/uploads', express.static(__dirname + '/uploads'));
+
 app.use(express.urlencoded({extended: false}));
 
 
 app.get('/', function(req, res) {
 
+    console.log('User session Login: ', req.session.isLogin ? true : false);
+    console.log('User : ', req.session.user ? req.session.user : {});
+
     db.connect(function (err, client, done) {
-        const query = 'SELECT * FROM tb_project_data ORDER BY id ASC';
+
+        // to select data from specific id we can make it like this
+
+        let query = '';
+
+        if (req.session.isLogin) {
+        query =  `SELECT tb_project_data.*, tb_user.id as "user_id", tb_user.name, tb_user.email
+                FROM tb_project_data LEFT JOIN tb_user
+                ON tb_project_data.author_id = tb_user.id
+                WHERE tb_user.id=${req.session.user.id} 
+                ORDER BY id ASC`;
+        } else {
+        query = `SELECT tb_project_data.*, tb_user.id as "user_id", tb_user.name, tb_user.email
+                FROM tb_project_data LEFT JOIN tb_user
+                ON tb_project_data.author_id = tb_user.id 
+                ORDER BY id ASC`;
+        }
+
+        // const query = `SELECT tb_project_data.*, tb_user.id as "user_id", tb_user.name, tb_user.email
+        //                 FROM tb_project_data LEFT JOIN tb_user
+        //                 ON tb_project_data.author_id = tb_user.id 
+        //                 ORDER BY id ASC`;
         client.query(query, function(err, result) {
             if (err) throw err;
     
 
             let data = result.rows[0];
-            // console.log(data);
-         //    map for data project
      
             let dataProjects = result.rows.map(function (data) {
+
+                const user_id = data.user_id ? data.user_id: '-';
+                const name = data.name ? data.name: '-';
+                const email = data.email ? data.email: '-';
+
+                delete data.user_id;
+                delete data.name;
+                delete data.email;
+
+                // const PATH = 'http://localhost:5001/uploads/'
+
              return {
                 ...data,
                  duration: timeDuration(data.startdate, data.enddate),
-                //  technologies: techIcon(data.technologies),
-                 isLogin: req.session.isLogin, 
-             };
+                 isLogin: req.session.isLogin,
+                 author: {
+                     user_id,
+                     name,
+                     email,
+                 },
+                 image: PATH + data.image,
+             };  
          });
-        //  console.log(data.technologies);
+        //  console.log(dataProjects);
          res.render('index', {
              user: req.session.user,
              isLogin: req.session.isLogin, 
@@ -77,7 +120,9 @@ app.get('/detail-project/:id', function (req, res) {
 
     db.connect(function (err, client, done) {
 
-        const query = `SELECT * FROM tb_project_data WHERE id=${id}`;
+        const query = `SELECT tb_project_data.*, tb_user.id as "user_id", tb_user.name, tb_user.email
+                        FROM tb_project_data LEFT JOIN tb_user
+                        ON tb_project_data.author_id = tb_user.id WHERE tb_project_data.id=${id}`;
 
         client.query(query, function(err, result) {
             if (err) throw err;
@@ -87,11 +132,20 @@ app.get('/detail-project/:id', function (req, res) {
             
             data = {
                  ...data,
+                 author: {
+                    user_id: data.user_id,
+                    name: data.name,
+                    email: data.email,
+                 },
                  duration: timeDuration(data.startdate, data.enddate),
                  timestartformat: timeFormat(data.startdate),
                  timeendformat: timeFormat(data.enddate),
              };
-        
+             
+                delete data.user_id;
+                delete data.name;
+                delete data.email;
+                console.log(data)
          res.render('detail-project', { project: data});
          });
     });
@@ -112,6 +166,7 @@ app.get('/update-project/:id', function (req, res) {
             let data = result.rows[0];
             data = {
                 ...data,
+                image: PATH + data.image,
                 startdate: renderDate(data.startdate),
                 enddate: renderDate(data.enddate),
                 nodejs: viewCheck(data.nodejs),
@@ -160,13 +215,14 @@ app.get('/contact-me', function(req, res) {
     res.render('contact-me');
 });
 
-app.post('/add-project', function(req, res) {
+app.post('/add-project', upload.single('image'), function(req, res) {
     let data = req.body;
 
     db.connect(function (err, client, done) {
         if (err) throw err;
 
-        const query = `INSERT INTO tb_project_data (projectname, startdate, enddate, description, image, nodejs, nextjs, reactjs, typescript) VALUES ('${data.projectname}','${data.startdate}','${data.enddate}','${data.description}','${data.image}', '${checkboxRender(data.nodejs)}', '${checkboxRender(data.nextjs)}', '${checkboxRender(data.reactjs)}', '${checkboxRender(data.typescript)}')`;
+        const query = `INSERT INTO tb_project_data (projectname, startdate, enddate, description, image, nodejs, nextjs, reactjs, typescript, author_id) 
+                        VALUES ('${data.projectname}','${data.startdate}','${data.enddate}','${data.description}','${req.file.filename}', '${checkboxRender(data.nodejs)}', '${checkboxRender(data.nextjs)}', '${checkboxRender(data.reactjs)}', '${checkboxRender(data.typescript)}', '${req.session.user.id}')`;
         
         client.query(query, function (err, result) {
             if (err) throw err;
@@ -176,19 +232,19 @@ app.post('/add-project', function(req, res) {
     });    
 });
 
-app.post('/update-project/:id', function (req, res) {
+app.post('/update-project/:id', upload.single('image'), function (req, res) {
     let id = req.params.id;
 
     let update = req.body;
     db.connect(function (err, client, done) {
         if (err) throw err;
 
-        const query = `UPDATE tb_project_data
-         SET projectname= '${update.projectname}', startdate= '${update.startdate}', enddate='${update.enddate}', description='${update.description}', image='image.png', nodejs='${checkboxRender(update.nodejs)}', reactjs='${checkboxRender(update.reactjs)}', nextjs='${checkboxRender(update.nextjs)}', typescript='${checkboxRender(update.typescript)}'
+        const updatequery = `UPDATE tb_project_data
+         SET projectname= '${update.projectname}', startdate= '${update.startdate}', enddate='${update.enddate}', description='${update.description}', image='${update.image}', nodejs='${checkboxRender(update.nodejs)}', reactjs='${checkboxRender(update.reactjs)}', nextjs='${checkboxRender(update.nextjs)}', typescript='${checkboxRender(update.typescript)}'
          WHERE id=${id}`;
 
-        //  console.log(query)
-        client.query(query, function (err, result) {
+         console.log(updatequery)
+        client.query(updatequery, function (err, result) {
             if (err) throw err;
 
             done();
@@ -225,6 +281,11 @@ app.post('/register', function (req, res) {
 app.post('/login', function (req, res) {
     const data = req.body;
 
+    if (data.email == '' || data.password == '') {
+        req.flash('error', 'Please insert all field!');
+        return res.redirect('/login');
+      }
+
     db.connect(function(err, client, done) {
         if (err) throw err;
 
@@ -241,11 +302,11 @@ app.post('/login', function (req, res) {
             
             const isMatch = bcrypt.compareSync(
                 data.password,
-                result.rows[0].password
+                result.rows[0].password,
             );
 
             if (isMatch == false) {
-                req.flash('error', 'Wrong password!');
+                // req.flash('error', 'Wrong password!');
                 return res.redirect('/login');
             } else {
                 req.session.isLogin = true;
@@ -345,7 +406,6 @@ function checkboxRender(chck) {
         return false
     }
 };
-
 
 
 function renderDate(time) {

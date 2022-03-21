@@ -95,9 +95,10 @@
             <div id="project-card-container" class="project-card-container">
                 {{#each projects}}
                 <div class="p-card">
-                    <img src="/public/pictures/detail-project.jpg" alt="project" />
+                    <img src="{{this.image}}" alt="project" />
                     <h5><a href="/detail-project/{{id}}">{{this.projectname}}</a></h5>
                     <p>durasi : {{this.duration}}</p>
+                    <p>posted by :{{this.author.name}}</p>
                     <p>{{this.description}}</p>
                     <div class="icon-container">
                         {{this.technologies}}
@@ -119,7 +120,9 @@
                         <a href="/update-project/{{this.id}}" class="editBtn">edit</a>
                         <a href="/delete-project/{{this.id}}" class="deleteBtn">delete</a>
                     </div>
+                    {{!-- <p>posted by :{{this.author.name}}</p> --}}
                     {{else}}
+                    {{!-- <p>posted by :{{this.author.name}}}</p> --}}
                     <p>*login to edit and delete</p>
                     {{/if}}
                 </div>

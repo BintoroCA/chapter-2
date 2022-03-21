@@ -75,7 +75,7 @@
 
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label fw-label">Description</label>
-                <textarea class="form-control form-control-lg fs-4 shadow br-10" id="exampleFormControlTextarea1" rows="3" id="description" value="{{updateproject.description}}" name="description"></textarea>
+                <textarea class="form-control form-control-lg fs-4 shadow br-10" id="exampleFormControlTextarea1" rows="3" id="description" placeholder="{{updateproject.description}}" name="description"></textarea>
               </div>
 
               <p class="fw-label">Technologies</p>
@@ -107,7 +107,7 @@
               <p class="fw-label">Upload Image</p>
 
               <div class="image-preview">
-                <a 
+                <img src="{{updateproject.image}}" alt="preview"/>
               </div>
 
               <div class="input-group">

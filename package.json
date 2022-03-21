@@ -103,6 +103,7 @@
     "minimatch": "^3.1.2",
     "minimist": "^1.2.5",
     "ms": "^2.0.0",
+    "multer": "^1.4.4",
     "negotiator": "^0.6.3",
     "nopt": "^1.0.10",
     "normalize-path": "^3.0.0",
