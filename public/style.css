@@ -7,64 +7,12 @@
     font-family: 'Poppins', sans-serif; 
 }
 
-html {
+/* html {
     font-size: 62.5%;
-}
+} */
 
-/* navigation bar */
-
-nav {
-    display: flex;
-    min-height: 7vh;
-    background-color: #f4f3f3;
-    position: sticky;
-    top: 0;
-}
-
-nav div {
-    display: flex;
-    padding: 0% 5%;
-    align-items: center;
-}
-
-nav .left-side {
-    flex: 50%;
-}
-
-nav .left-side img {
-    margin-right: 20px;
-}
-
-nav .left-side li {
-    list-style-type: none;
-    margin-right: 20px;
-    display: inline-block;
-    font-size: 20px;
-}
-
-nav .left-side li a {
-    text-decoration: none;
-    color: black;
-}
-
-nav .right-side {
-    flex: 50%;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-nav .right-side a {
-    font-size: 1.5rem;
-    padding: 5px 20px;
-    border-radius: 10px;
-    color: white;
-    text-decoration: none;
-    background-color: #111727;
-    border-radius: 10px;
-}
-
-nav .right-side a:hover {
-    transform: scale(1.1);
+body {
+    background-color: #e3e7eb;
 }
 
 /* welcome page - start */
@@ -81,6 +29,7 @@ nav .right-side a:hover {
 .container-content {
     display: flex;
     width: 90%;
+    min-height: 70vh;
     border: 0px solid rgb(145, 145, 145);
     border-radius: 10px;
     background-color:rgb(255, 255, 255);
@@ -112,13 +61,9 @@ nav .right-side a:hover {
     justify-content: center;      
 }
 
-.introduction h1 {
-    font-size: 22px;
-}
 
 .introduction p {
     text-align: justify; 
-    font-size: 13px; 
     font-weight: 500;
 }
 
@@ -132,10 +77,10 @@ nav .right-side a:hover {
     background-color: #111727;
     border: none;
     color: white;
-    padding: 5px 20px;
+    padding: 8px 20px;
     text-align: center;
     text-decoration: none;
-    width: 115px;
+    width: 123px;
     border-radius: 50px;
     font-size: 16px;
     font-weight: 300;
@@ -158,7 +103,7 @@ nav .right-side a:hover {
 }
 
 .social-media {
-    padding: 30px 50px;
+    padding: 50px;
 }
 
 .social-media svg:hover {
@@ -167,11 +112,12 @@ nav .right-side a:hover {
 
 /* right side content */
 
-.card {
+.profile-card {
     width: 100%;
-    min-width: 280px;
-    max-width: 315px;
-    height: 430px;
+    min-width: 300px;
+    max-width: 460px;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     border: 0px solid rgb(255, 255, 255);
@@ -181,6 +127,7 @@ nav .right-side a:hover {
 
 .card-img {
     height: 83%;
+    min-height: 316px;
     background-color: bisque;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -191,16 +138,13 @@ nav .right-side a:hover {
     background-image: url('/public/pictures/bintoro2.jpg');
 }
 
-.card h2 {
+.profile-card h2 {
     text-align: center;
-    font-size: 20px;
-    font-weight: 700; 
     padding-top: 10px;
 }
 
-.card p {
+.profile-card p {
     text-align: center;
-    font-size: 13px; 
     font-weight: 450;
     padding-bottom: 10px; 
 }
@@ -225,7 +169,7 @@ nav .right-side a:hover {
 /* My Project List - Start */
 
 .project-list {
-    min-height: 93vh;
+    min-height: 95vh;
     display: flex;
     flex-wrap: wrap;
     flex-direction: column;
@@ -235,9 +179,7 @@ nav .right-side a:hover {
 
 .project-list h2 {
     display: inline-block;
-    font-size: 3rem;
     width: 100%;
-    height: fit-content;
     text-align: center;
     padding: 5% 0px;
 }
@@ -251,8 +193,8 @@ nav .right-side a:hover {
 }
 
 .p-card {
-    width: 300px;
-    height: 420px;
+    width: 350px;
+    height: 500px;
     margin: 20px 20px;
     border: 0px inset #a3a3a3;
     border-radius: 10px;
@@ -276,7 +218,7 @@ nav .right-side a:hover {
     color: gold;
 }
 
-.p-card:hover > h3 a {
+.p-card:hover > h5 a {
     text-decoration: none !important;
     color: white;
 }
@@ -291,23 +233,23 @@ nav .right-side a:hover {
     border-radius: 10px;
 }
 
-.p-card h3 {
+.p-card h5 {
     display: inline-block;
     width: 100%;
     margin-top: 3%;
     word-break: break-all;
     font-size: 1.6rem;
     font-weight: 600;
-    overflow: hidden;
+    /* overflow: hidden; */
     color: black;
 }
 
-.p-card h3 a {
+.p-card h5 a {
     text-decoration: none !important;
     color: black;
 }
 
-.p-card h3 a:hover {
+.p-card h5 a:hover {
     text-decoration: none !important;
     color: white;
 }
@@ -352,6 +294,7 @@ nav .right-side a:hover {
     display: flex;
     justify-content: space-evenly;
     height: 6%;
+    align-items: center;
 }
 
 .p-card .button-container a {
@@ -359,7 +302,8 @@ nav .right-side a:hover {
     background-color: #111727;
     color: white;
     padding: 1px 50px;
-    border-radius: 5px;
+    margin-bottom: 10px;
+    border-radius: 10px;
     font-size: 1.3rem;
     z-index: 1;
 }
@@ -398,8 +342,8 @@ nav .right-side a:hover {
 /* contact-me page - start */
 
 .form-container {
-    background-color: #dce0e4;
-    min-height: 93vh;
+    background-color: #e3e7eb;
+    min-height: 95vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -752,6 +696,49 @@ input[type=checkbox] {
 }
 
 /* after bootstrap css */
+
+.navbar>.container {
+    height: 5vh;
+}
+
+.nav-item {
+    margin-left: 30px;
+}
+
+.main-container {
+    height: 78vh;
+}
+
+.btn-capsule {
+    background-color: #111727;
+    border: none;
+    color: white;
+    padding: 5px 20px;
+    text-align: center;
+    text-decoration: none;
+    width: 190px;
+    border-radius: 50px;
+    /* font-size: 20px; */
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.fw-label {
+    font-weight: 600;
+}
+
+.fw-tech {
+    font-weight: 600;
+    color: #7c7879;
+}
+
+.br-10 {
+    border-radius: 10px;
+}
+
+.box-height {
+    height: 120px;
+}
 
 /* add project page - start */
 

@@ -1,4 +1,7 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+const session = require('express-session');
+const flash = require('express-flash');
 
 const db = require('./connection/db');
 
@@ -12,20 +15,30 @@ db.connect(function(err, _, done) {
 const app = express();
 const PORT = 5001;
 
-const isLogin = true;
+const isLogin = false;
 let projects = [];
 
 app.set('view engine', 'hbs');
 
-app.use('/public', express.static(__dirname + '/public'));
+app.use(flash());
 
+app.use(
+    session({
+        resave: false,
+        secret: 'secret',
+        cookie: { maxAge: 1000 * 60 * 60 },
+        saveUninitialized: true,
+    })
+);
+
+app.use('/public', express.static(__dirname + '/public'));
 app.use(express.urlencoded({extended: false}));
 
 
 app.get('/', function(req, res) {
 
     db.connect(function (err, client, done) {
-        const query = 'SELECT * FROM tb_project_data';
+        const query = 'SELECT * FROM tb_project_data ORDER BY id ASC';
         client.query(query, function(err, result) {
             if (err) throw err;
     
@@ -36,21 +49,31 @@ app.get('/', function(req, res) {
      
             let dataProjects = result.rows.map(function (data) {
              return {
-                 
+                ...data,
                  duration: timeDuration(data.startdate, data.enddate),
                 //  technologies: techIcon(data.technologies),
-                 isLogin, 
-                 ...data,
+                 isLogin: req.session.isLogin, 
              };
          });
         //  console.log(data.technologies);
-         res.render('index', {isLogin , projects: dataProjects});
+         res.render('index', {
+             user: req.session.user,
+             isLogin: req.session.isLogin, 
+             projects: dataProjects});
          });
-    });
+        });
+});
+
+app.get('/add-project', function(req, res) {
+    res.render('add-project');
+});
+
+app.get('/detail-project', function(req, res) {
+    res.render('detail-project');
 });
 
 app.get('/detail-project/:id', function (req, res) {
-    let id = req.params.id;
+        let id = req.params.id;
 
     db.connect(function (err, client, done) {
 
@@ -62,62 +85,16 @@ app.get('/detail-project/:id', function (req, res) {
 
             let data = result.rows[0];
             
-            // console.log(data);
-         //    map for data project
-
-         let start = new Date(data.startdate);
-         let end = new Date(data.enddate);
-
             data = {
                  ...data,
-                 duration: timeDuration(start, end),
-                 timestartformat: timeFormat(start),
-                 timeendformat: timeFormat(end),
+                 duration: timeDuration(data.startdate, data.enddate),
+                 timestartformat: timeFormat(data.startdate),
+                 timeendformat: timeFormat(data.enddate),
              };
         
          res.render('detail-project', { project: data});
          });
     });
-});
-
-app.get('/add-project', function(req, res) {
-    res.render('add-project');
-});
-
-app.post('/add-project', function(req, res) {
-    let data = req.body;
-
-    db.connect(function (err, client, done) {
-        if (err) throw err;
-
-        const query = `INSERT INTO tb_project_data (projectname, startdate, enddate, description, image, nodejs, nextjs, reactjs, typescript) VALUES ('${data.projectname}','${data.startdate}','${data.enddate}','${data.description}','${data.image}', '${checkboxRender(data.nodejs)}', '${checkboxRender(data.nextjs)}', '${checkboxRender(data.reactjs)}', '${checkboxRender(data.typescript)}')`;
-        
-        client.query(query, function (err, result) {
-            if (err) throw err;
-            done();
-            res.redirect('/');
-        });
-    });    
-});
-
-app.get('/delete-project/:id', function(req, res) {
-    let id = req.params.id;
-
-    db.connect(function (err, client, done) {
-        if (err) throw err;
-
-        const query = `DELETE FROM tb_project_data WHERE id=${id}`;
-
-        client.query(query, function (err, result) {
-            if (err) throw err;
-            done();
-            res.redirect('/');
-        });
-    });
-});
-
-app.get('/detail-project', function(req, res) {
-    res.render('detail-project');
 });
 
 app.get('/update-project/:id', function (req, res) {
@@ -148,7 +125,55 @@ app.get('/update-project/:id', function (req, res) {
             done();
         });
     });
+});
 
+app.get('/delete-project/:id', function(req, res) {
+    let id = req.params.id;
+
+    db.connect(function (err, client, done) {
+        if (err) throw err;
+
+        const query = `DELETE FROM tb_project_data WHERE id=${id}`;
+
+        client.query(query, function (err, result) {
+            if (err) throw err;
+            done();
+            res.redirect('/');
+        });
+    });
+});
+
+app.get('/register', function(req, res) {
+    res.render('register');
+});
+
+app.get('/login', function(req, res) {
+    res.render('login');
+});
+
+app.get('/logout', function (req, res) {
+    req.session.destroy();
+    res.redirect('/');
+});
+
+app.get('/contact-me', function(req, res) {
+    res.render('contact-me');
+});
+
+app.post('/add-project', function(req, res) {
+    let data = req.body;
+
+    db.connect(function (err, client, done) {
+        if (err) throw err;
+
+        const query = `INSERT INTO tb_project_data (projectname, startdate, enddate, description, image, nodejs, nextjs, reactjs, typescript) VALUES ('${data.projectname}','${data.startdate}','${data.enddate}','${data.description}','${data.image}', '${checkboxRender(data.nodejs)}', '${checkboxRender(data.nextjs)}', '${checkboxRender(data.reactjs)}', '${checkboxRender(data.typescript)}')`;
+        
+        client.query(query, function (err, result) {
+            if (err) throw err;
+            done();
+            res.redirect('/');
+        });
+    });    
 });
 
 app.post('/update-project/:id', function (req, res) {
@@ -162,7 +187,7 @@ app.post('/update-project/:id', function (req, res) {
          SET projectname= '${update.projectname}', startdate= '${update.startdate}', enddate='${update.enddate}', description='${update.description}', image='image.png', nodejs='${checkboxRender(update.nodejs)}', reactjs='${checkboxRender(update.reactjs)}', nextjs='${checkboxRender(update.nextjs)}', typescript='${checkboxRender(update.typescript)}'
          WHERE id=${id}`;
 
-         console.log(query)
+        //  console.log(query)
         client.query(query, function (err, result) {
             if (err) throw err;
 
@@ -173,8 +198,66 @@ app.post('/update-project/:id', function (req, res) {
     res.redirect("/");
 });
 
-app.get('/contact-me', function(req, res) {
-    res.render('contact-me');
+app.post('/register', function (req, res) {
+    const data = req.body;
+
+    if (data.name == ''|| data.email == '' || data.password == '') {
+        req.flash('error', 'Please insert all field!');
+        return res.redirect('/register');
+    }
+
+    const hashedPassword = bcrypt.hashSync(data.password, 10);
+
+    db.connect(function (err, client, done) {
+        if (err) throw err;
+
+        const query = `INSERT INTO tb_user(name,email,password) VALUES('${data.name}','${data.email}','${hashedPassword}')`;
+
+        client.query(query, function (err, result) {
+            if (err) throw err;
+            done();
+            req.flash('success', 'Success register your account!');
+            res.redirect('/login');
+        });
+    });
+});
+
+app.post('/login', function (req, res) {
+    const data = req.body;
+
+    db.connect(function(err, client, done) {
+        if (err) throw err;
+
+        const query = `SELECT * FROM tb_user WHERE email = '${data.email}'`;
+
+        client.query(query, function (err, result) {
+            if (err) throw err;
+            done();
+
+            if (result.rows.lenght == 0) {
+                req.flash('error', 'Email not found!');
+                return res.redirect('/login');
+            }; 
+            
+            const isMatch = bcrypt.compareSync(
+                data.password,
+                result.rows[0].password
+            );
+
+            if (isMatch == false) {
+                req.flash('error', 'Wrong password!');
+                return res.redirect('/login');
+            } else {
+                req.session.isLogin = true;
+                req.session.user = {
+                    id: result.rows[0].id,
+                    email: result.rows[0].email,
+                    name: result.rows[0].name,
+                };
+                res.redirect('/');
+            };
+        });
+    });
 });
 
 app.listen(PORT, function () {
@@ -237,7 +320,7 @@ function timeFormat(time) {
     return fullTime;
   }
 
-function techIcon (technologies) {
+// function techIcon (technologies) {
     // let techicon [
     //     'nodejs',
     //     'nextjs',
@@ -250,18 +333,20 @@ function techIcon (technologies) {
     // let typescript = techicon[3]
 
     // let nodejs = technologies;
-    if (technologies = true) {
-        return 'nodejs'
-    };
-};
+//     if (technologies = true) {
+//         return 'nodejs'
+//     };
+// };
 
-function checkboxRender(par1) {
-    if (par1 == "true") {
+function checkboxRender(chck) { 
+    if (chck == "true") {
         return true
-    } else if (par1 != true) {
+    } else {
         return false
     }
-}
+};
+
+
 
 function renderDate(time) {
 
