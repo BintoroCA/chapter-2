@@ -52,7 +52,7 @@
               <h2 class="fw-bold">UPDATE MY PROJECT</h2>
           </div>
           
-          <form action='/update-project/{{updateproject.id}}' method="POST" style="max-width: 800px; margin:0 auto;" class="fs-5">
+          <form action='/update-project/{{updateproject.id}}' enctype="multipart/form-data" method="POST" style="max-width: 800px; margin:0 auto;" class="fs-5">
             
             <div class="mb-3">
               <label for="project-name" class="form-label fw-label">Project Name</label>

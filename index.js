@@ -97,9 +97,11 @@ app.get('/', function(req, res) {
                  },
                  image: PATH + data.image,
              };  
+             
          });
-        //  console.log(dataProjects);
+         console.log(dataProjects);
          res.render('index', {
+            //  image: PATH + data.image,
              user: req.session.user,
              isLogin: req.session.isLogin, 
              projects: dataProjects});
@@ -239,12 +241,12 @@ app.post('/update-project/:id', upload.single('image'), function (req, res) {
     db.connect(function (err, client, done) {
         if (err) throw err;
 
-        const updatequery = `UPDATE tb_project_data
-         SET projectname= '${update.projectname}', startdate= '${update.startdate}', enddate='${update.enddate}', description='${update.description}', image='${update.image}', nodejs='${checkboxRender(update.nodejs)}', reactjs='${checkboxRender(update.reactjs)}', nextjs='${checkboxRender(update.nextjs)}', typescript='${checkboxRender(update.typescript)}'
+        const query = `UPDATE tb_project_data
+         SET projectname= '${update.projectname}', startdate= '${update.startdate}', enddate='${update.enddate}', description='${update.description}', image='${req.file.filename}', nodejs='${checkboxRender(update.nodejs)}', reactjs='${checkboxRender(update.reactjs)}', nextjs='${checkboxRender(update.nextjs)}', typescript='${checkboxRender(update.typescript)}'
          WHERE id=${id}`;
 
-         console.log(updatequery)
-        client.query(updatequery, function (err, result) {
+        //  console.log(query)
+        client.query(query, function (err, result) {
             if (err) throw err;
 
             done();
