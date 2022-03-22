@@ -46,9 +46,9 @@
       {{!-- NAVBAR END --}}
 
       <!-- UPDATE PROJECT FORM START -->
-        <div class="main-container">
+        {{!-- <div class="main-container min-vw-100 min-vh-100"> --}}
 
-          <div class="mx-auto" style="width:fit-content; display:block; margin:50px auto;">
+          <div class="mx-auto" style="width:fit-content; display:block; margin:25px auto;">
               <h2 class="fw-bold">UPDATE MY PROJECT</h2>
           </div>
           
@@ -56,48 +56,48 @@
             
             <div class="mb-3">
               <label for="project-name" class="form-label fw-label">Project Name</label>
-              <input type="text" class="form-control form-control-lg fs-4 shadow br-10" id="projectName" value="{{updateproject.projectname}}" name="projectname">
+              <input type="text" class="form-control form-control-lg fs-5 shadow br-10" id="projectName" value="{{updateproject.projectname}}" name="projectname">
             </div>
                   
             <div class="row g-3 mb-3">
 
               <div class="col">
                 <label for="start-date" class="form-label fw-label">Start Date</label>
-                <input type="date" class="form-control form-control-lg fs-4 shadow br-10" aria-label="Start Date" value="{{updateproject.startdate}}" name="startdate">
+                <input type="date" class="form-control form-control-lg fs-5 shadow br-10" aria-label="Start Date" value="{{updateproject.startdate}}" name="startdate">
               </div>
 
               <div class="col">
                 <label for="end-date" class="form-label fw-label">End Date</label>
-                <input type="date" class="form-control form-control-lg fs-4 shadow br-10" aria-label="End Date" value="{{updateproject.enddate}}" name="enddate">
+                <input type="date" class="form-control form-control-lg fs-5 shadow br-10" aria-label="End Date" value="{{updateproject.enddate}}" name="enddate">
               </div>
 
             </div>
 
               <div class="mb-3">
                 <label for="exampleFormControlTextarea1" class="form-label fw-label">Description</label>
-                <textarea class="form-control form-control-lg fs-4 shadow br-10" id="exampleFormControlTextarea1" rows="3" id="description" placeholder="{{updateproject.description}}" name="description"></textarea>
+                <textarea class="form-control form-control-lg fs-5 shadow br-10" id="exampleFormControlTextarea1" rows="3" id="description" placeholder="{{updateproject.description}}" name="description"></textarea>
               </div>
 
-              <p class="fw-label">Technologies</p>
+              <p class="fw-label mg0">Technologies</p>
 
               <div class="d-flex flex-wrap g-3">
 
-                <div class="col-6 mb-3 form-check">
+                <div class="col-6 mb-2 form-check">
                   <input type="checkbox" class="form-check-input" id="nodejs" value='true' name="nodejs" {{#if updateproject.nodejs}} checked {{/if}}>
                   <label class="form-check-label fw-tech" for="Technologies">Node Js</label>
                 </div>
 
-                <div class="col-6 mb-3 form-check">
+                <div class="col-6 mb-2 form-check">
                   <input type="checkbox" class="form-check-input" id="nextjs" value='true' name="nextjs" {{#if updateproject.nextjs}} checked {{/if}}>
                   <label class="form-check-label fw-tech" for="Technologies">Next Js</label>
                 </div>
 
-                <div class="col-6 b-3 form-check">
+                <div class="col-6 b-2 form-check">
                   <input type="checkbox" class="form-check-input" id="reactjs" value='true' name="reactjs" {{#if updateproject.reactjs}} checked {{/if}}> 
                   <label class="form-check-label fw-tech" for="Technologies">React Js</label>
                 </div>
 
-                <div class="col-6 mb-3 form-check">
+                <div class="col-6 mb-2 form-check">
                     <input type="checkbox" class="form-check-input" id="typescript" value='true' name="typescript" {{#if updateproject.typescript}} checked {{/if}}>
                     <label class="form-check-label fw-tech" for="Technologies">TypeScript</label>
                 </div>
@@ -111,16 +111,16 @@
               </div>
 
               <div class="input-group">
-                <input type="file" class="form-control form-control-lg fs-4 shadow br-10" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="image">
+                <input type="file" class="form-control form-control-lg fs-5 shadow br-10" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload" name="image">
               </div>
 
               <div class="d-flex flex-row-reverse">
-                <button style="margin-left: auto;" type="submit" class="btn btn-capsule my-5 fs-4">submit</button>
+                <button style="margin-left: auto;" type="submit" class="btn btn-capsule my-5 fs-5">submit</button>
               </div>
               
           </form>
 
-        </div>
+        {{!-- </div> --}}
         {{!-- UPDATE PROJECT FORM END --}}
 
             {{!-- BOOTSTRAP --}}

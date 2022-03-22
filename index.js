@@ -70,7 +70,7 @@ app.get('/', function(req, res) {
         //                 ORDER BY id ASC`;
         client.query(query, function(err, result) {
             if (err) throw err;
-    
+            
 
             let data = result.rows[0];
      
@@ -99,7 +99,7 @@ app.get('/', function(req, res) {
              };  
              
          });
-         console.log(dataProjects);
+        //  console.log(dataProjects);
          res.render('index', {
             //  image: PATH + data.image,
              user: req.session.user,
@@ -110,7 +110,7 @@ app.get('/', function(req, res) {
 });
 
 app.get('/add-project', function(req, res) {
-    res.render('add-project');
+    res.render('add-project', {isLogin: req.session.isLogin});
 });
 
 app.get('/detail-project', function(req, res) {
@@ -128,7 +128,7 @@ app.get('/detail-project/:id', function (req, res) {
 
         client.query(query, function(err, result) {
             if (err) throw err;
-            done()
+            
 
             let data = result.rows[0];
             
@@ -139,6 +139,7 @@ app.get('/detail-project/:id', function (req, res) {
                     name: data.name,
                     email: data.email,
                  },
+                 isLogin: req.session.isLogin, 
                  duration: timeDuration(data.startdate, data.enddate),
                  timestartformat: timeFormat(data.startdate),
                  timeendformat: timeFormat(data.enddate),
@@ -147,8 +148,8 @@ app.get('/detail-project/:id', function (req, res) {
                 delete data.user_id;
                 delete data.name;
                 delete data.email;
-                console.log(data)
-         res.render('detail-project', { project: data});
+                // console.log(data)
+         res.render('detail-project', {isLogin: req.session.isLogin, project: data});
          });
     });
 });
@@ -164,6 +165,7 @@ app.get('/update-project/:id', function (req, res) {
         // console.log(query);
         client.query(query, function (err, result) {
             if (err) throw err;
+            
 
             let data = result.rows[0];
             data = {
@@ -177,7 +179,7 @@ app.get('/update-project/:id', function (req, res) {
                 typescript: viewCheck(data.typescript)
             }
             // console.log(data);
-            res.render('update-project', { updateproject: data });
+            res.render('update-project', {isLogin: req.session.isLogin, updateproject: data });
 
             done();
         });
@@ -214,7 +216,7 @@ app.get('/logout', function (req, res) {
 });
 
 app.get('/contact-me', function(req, res) {
-    res.render('contact-me');
+    res.render('contact-me', {isLogin: req.session.isLogin});
 });
 
 app.post('/add-project', upload.single('image'), function(req, res) {
@@ -383,24 +385,6 @@ function timeFormat(time) {
     return fullTime;
   }
 
-// function techIcon (technologies) {
-    // let techicon [
-    //     'nodejs',
-    //     'nextjs',
-    //     'reactjs',
-    //     'typescript',
-    // ];
-    // let nodejs = techicon[0]
-    // let nextjs = techicon[1]
-    // let reactjs = techicon[2]
-    // let typescript = techicon[3]
-
-    // let nodejs = technologies;
-//     if (technologies = true) {
-//         return 'nodejs'
-//     };
-// };
-
 function checkboxRender(chck) { 
     if (chck == "true") {
         return true
@@ -412,11 +396,11 @@ function checkboxRender(chck) {
 
 function renderDate(time) {
 
-    let hari = [
+    let day = [
         "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31"
     ]
 
-    let bulan = [
+    let month = [
         "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"
     ]
 
@@ -424,9 +408,9 @@ function renderDate(time) {
     let monthIndex = time.getMonth();
     let year = time.getFullYear();
 
-    let fullTime = `${year}-${bulan[monthIndex]}-${hari[date]}`;
+    let timeFormat = `${year}-${month[monthIndex]}-${day[date]}`;
 
-    return fullTime;
+    return timeFormat;
 }
 
 function viewCheck(par1) {

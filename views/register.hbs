@@ -45,14 +45,7 @@
         </nav>
       {{!-- NAVBAR END --}}
 
-        {{!-- ALERT START--}}
-
-        {{#if messages.error}}
-            <div class='alert alert-danger' role="'alert">
-            {{messages.error}}
-            </div>
-        {{/if}}
-        {{!-- ALERT END --}}
+        
 
         <!-- TITLE START -->
         <div class="mx-auto" style="width:fit-content; display:block; margin:50px auto;">
@@ -62,6 +55,16 @@
         
         {{!-- FORM START --}}
         <form action='/register' method="POST" style="max-width: 800px; margin:0 auto;" class="fs-5">
+
+        {{!-- ALERT START--}}
+
+        {{#if messages.error}}
+            <div class='alert alert-danger' role="'alert">
+            {{messages.error}}
+            </div>
+        {{/if}}
+        
+        {{!-- ALERT END --}}
 
             <div class="mb-3">
                 <label for="name" class="form-label fw-label">Name</label>

@@ -236,16 +236,22 @@ body {
 .p-card h5 {
     display: inline-block;
     width: 100%;
+    /* height: 9%; */
     margin-top: 3%;
     word-wrap: break-word !important;
     word-break: break-all;
-    font-size: 1.6rem;
+    /* font-size: 1.6rem; */
     font-weight: 600;
     overflow: hidden;
     color: black;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+    /* white-space: nowrap;
+    text-overflow: ellipsis; */
+    /* margin-block-start: 0px !important; */
+    margin-block-end: 0px !important;
+    margin-bottom: 0px !important;
 }
 
 .p-card h5 a {
@@ -263,11 +269,13 @@ body {
     width: 100%;
     color: #888888;
     height: 2%;
-    font-size: 1.15rem;
+    /* font-size: 1.15rem; */
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     /* overflow: hidden; */
+    /* margin-block-start: 0px !important;
+    margin-block-end: 0px !important; */
 }
 
 .p-card p:not(:first-of-type) {
@@ -275,16 +283,19 @@ body {
     width: 100%;
     /* margin-top: 6%;
     height: 23%; */
-    font-size: 1.2rem;
+    /* font-size: 1.2rem; */
     font-weight: 500;
     text-align: justify;
     word-break: break-all;
     overflow: hidden;
     color: black;
-    display: -webkit-box;
+    /* display: -webkit-box;
     -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    -webkit-box-orient: vertical; */
+    /* margin-bottom: 1% !important; */
 }
+
+
 
 .p-card .icon-container {
     height: 10%;
@@ -749,6 +760,14 @@ input[type=checkbox] {
 
 .box-height {
     height: 120px;
+}
+
+.image-preview img {
+    max-height: 120px;
+}
+
+.mg0 {
+    margin-bottom: 0px !important;
 }
 
 /* add project page - start */

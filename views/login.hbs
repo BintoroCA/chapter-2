@@ -51,7 +51,13 @@
         </div>
         {{!-- TITLE END --}}
 
-        {{!-- ALERT START --}}
+       
+
+
+        {{!-- FORM START --}}
+        <form action='/login' method="POST" style="max-width: 800px; margin:0 auto;" class="fs-5">
+
+         {{!-- ALERT START --}}
 
         {{#if messages.success}}
         <div class='alert alert-success' role='alert'>
@@ -66,10 +72,6 @@
         {{/if}}
 
         {{!-- ALERT END --}}
-
-
-        {{!-- FORM START --}}
-        <form action='/login' method="POST" style="max-width: 800px; margin:0 auto;" class="fs-5">
 
             <div class="mb-3">
                 <label for="email" class="form-label fw-label">Email</label>
